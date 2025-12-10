@@ -10,15 +10,11 @@ build_device() {
     . build/envsetup.sh
     lunch "yaap_${device}-${variant}"
 
-    YAAP_BUILDTYPE=Banshee
-
     if [ "$gapps" = true ]; then
-        TARGET_BUILD_GAPPS=true
+        YAAP_BUILDTYPE=Banshee TARGET_BUILD_GAPPS=true m yaap
     else
-        unset TARGET_BUILD_GAPPS
+        YAAP_BUILDTYPE=Banshee m yaap
     fi
-
-    m yaap
 }
 
 device=""

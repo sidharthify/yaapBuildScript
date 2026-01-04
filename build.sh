@@ -13,7 +13,7 @@ build_device() {
     if [ "$gapps" = true ]; then
         YAAP_BUILDTYPE=Banshee TARGET_BUILD_GAPPS=true m yaap
     else
-        YAAP_BUILDTYPE=Banshee m yaap
+        YAAP_BUILDTYPE=Vanilla m yaap
     fi
 }
 

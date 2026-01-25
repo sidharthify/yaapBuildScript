@@ -12,9 +12,8 @@ handle_artifacts() {
     local build_type="$2" # vanilla or banshee
     local do_upload="$3"
     
-    local type_lower=$(echo "$build_type" | tr '[:upper:]' '[:lower:]')
-    local src="out/target/product/${device}"
-    local dest="${OUTPUT_ROOT}/${device}/${type_lower}"
+    local type_orig="$build_type"
+    local dest="${OUTPUT_ROOT}/${device}"
 
     echo "YAAP Build Script >> [1/2] moving artifacts for ${device} (${build_type}) to ${dest}..."
     mkdir -p "$dest"
@@ -24,7 +23,7 @@ handle_artifacts() {
         mv "$src"/*.zip.sha256sum "$dest/"
         
         if [ -f "$src/${device}.json" ]; then
-            mv "$src/${device}.json" "$dest/"
+            mv "$src/${device}.json" "$dest/${build_type}"
         fi
         
         echo "YAAP Build Script >> artifacts moved locally."
@@ -39,7 +38,7 @@ handle_artifacts() {
             fi
 
             # mirror the structure of the local folder to the gdrive folder
-            rclone copy "$dest" "${RCLONE_REMOTE}:${RCLONE_ROOT_FOLDER}/${device}/${type_lower}" --progress
+            rclone copy "$dest" "${RCLONE_REMOTE}:${RCLONE_ROOT_FOLDER}/${device}/${build_type}" --progress
             
             echo "YAAP Build Script >> upload complete."
         fi

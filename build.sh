@@ -3,7 +3,7 @@
 set -e
 
 # config
-OUTPUT_ROOT="$HOME/yaap"
+OUTPUT_ROOT="/mnt/sda/yaap/"
 RCLONE_REMOTE="gdrive"
 RCLONE_ROOT_FOLDER="yaap-builds" 
 
@@ -14,16 +14,18 @@ handle_artifacts() {
     
     local type_orig="$build_type"
     local dest="${OUTPUT_ROOT}/${device}"
+    local out="${OUTPUT_ROOT}/out/target/product/${device}"
 
     echo "YAAP Build Script >> [1/2] moving artifacts for ${device} (${build_type}) to ${dest}..."
     mkdir -p "$dest"
 
-    if ls "$src"/*.zip 1> /dev/null 2>&1; then
-        mv "$src"/*.zip "$dest/"
-        mv "$src"/*.zip.sha256sum "$dest/"
+    if ls "$out"/*.zip 1> /dev/null 2>&1; then
+        mv "$out"/*.zip "$dest/"
+        mv "$out"/*.zip.sha256sum "$dest/"
         
-        if [ -f "$src/${device}.json" ]; then
-            mv "$src/${device}.json" "$dest/${build_type}"
+        if [ -f "$out/${device}.json" ]; then
+            mkdir -p "$dest/$build_type"
+            mv "$out/${device}.json" "$dest/${build_type}"
         fi
         
         echo "YAAP Build Script >> artifacts moved locally."
@@ -43,7 +45,7 @@ handle_artifacts() {
             echo "YAAP Build Script >> upload complete."
         fi
     else
-        echo "YAAP Build Scrip >> !! error: no zip file found in ${src}."
+        echo "YAAP Build Scrip >> !! error: no zip file found in ${out}."
         exit 1
     fi
 }

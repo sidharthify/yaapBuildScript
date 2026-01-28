@@ -5,13 +5,13 @@ set -e
 # config
 OUTPUT_ROOT="/mnt/sda/yaap/"
 RCLONE_REMOTE="gdrive"
-RCLONE_ROOT_FOLDER="yaap-builds" 
+RCLONE_ROOT_FOLDER="yaap-builds"
 
 handle_artifacts() {
     local device="$1"
     local build_type="$2" # vanilla or banshee
     local do_upload="$3"
-    
+
     local type_orig="$build_type"
     local dest="${OUTPUT_ROOT}/${device}"
     local out="${OUTPUT_ROOT}/out/target/product/${device}"
@@ -20,19 +20,20 @@ handle_artifacts() {
     mkdir -p "$dest"
 
     if ls "$out"/*.zip 1> /dev/null 2>&1; then
+        mkdir -p "$dest/$build_type"
         mv "$out"/*.zip "$dest/"
         mv "$out"/*.zip.sha256sum "$dest/"
-        
+
         if [ -f "$out/${device}.json" ]; then
-            mkdir -p "$dest/$build_type"
+            mkdir -p "$dest/${build_type}"
             mv "$out/${device}.json" "$dest/${build_type}"
         fi
-        
+
         echo "YAAP Build Script >> artifacts moved locally."
-        
+
         if [ "$do_upload" = true ]; then
             echo ">> [2/2] uploading to google drive (remote: ${RCLONE_REMOTE})..."
-            
+
             # check if rclone is installed
             if ! command -v rclone &> /dev/null; then
                 echo "!! error: rclone is not installed. skipping upload."
@@ -41,7 +42,7 @@ handle_artifacts() {
 
             # mirror the structure of the local folder to the gdrive folder
             rclone copy "$dest" "${RCLONE_REMOTE}:${RCLONE_ROOT_FOLDER}/${device}/${build_type}" --progress
-            
+
             echo "YAAP Build Script >> upload complete."
         fi
     else
@@ -89,7 +90,7 @@ while [ $# -gt 0 ]; do
         --gapps) gapps=true ;;
         --vanilla) gapps=false ;;
         --build-all) build_all=true ;;
-        --upload) upload=true ;; # NEW FLAG
+        --upload) upload=true ;;
         *) echo "unknown option: $1" >&2; exit 1 ;;
     esac
     shift

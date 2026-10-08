@@ -7,6 +7,10 @@ OUTPUT_ROOT="${YAAP_DIR:-/mnt/sda/yaap}"
 RCLONE_REMOTE="gdrive"
 RCLONE_ROOT_FOLDER="yaap-builds"
 
+# android 17 defaults to siso, which needs ~60GB of RAM just to analyze
+# Android.bp files. stick to ninja unless told otherwise
+export SOONG_NINJA="${SOONG_NINJA:-ninja}"
+
 # build from the source tree no matter where the script is called from
 cd "$OUTPUT_ROOT"
 

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<manifest>
+  <!-- GrapheneOS removed the 16-qpr2 branch the YAAP manifest tracks.
+       Drop this once yaap/manifest moves to 17. -->
+  <extend-project name="GrapheneOS/platform_external_vanadium" revision="17" />
+</manifest>

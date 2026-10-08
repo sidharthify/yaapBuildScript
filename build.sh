@@ -3,9 +3,12 @@
 set -e
 
 # config
-OUTPUT_ROOT="/mnt/sda/yaap/"
+OUTPUT_ROOT="${YAAP_DIR:-/mnt/sda/yaap}"
 RCLONE_REMOTE="gdrive"
 RCLONE_ROOT_FOLDER="yaap-builds"
+
+# build from the source tree no matter where the script is called from
+cd "$OUTPUT_ROOT"
 
 handle_artifacts() {
     local device="$1"

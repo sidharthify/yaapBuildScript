@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<manifest>
+  <!-- Google Pixel 7 / 7 Pro (panther / cheetah) -->
+  <project path="device/google/pantah" name="sidharthify/device_google_pantah" remote="github" revision="seventeen" />
+  <project path="device/google/pantah-kernels/6.1" name="device_google_pantah-kernels_6.1" remote="yaap" revision="sixteen" clone-depth="1" />
+  <project path="vendor/google/panther" name="vendor_google_panther" remote="yaap" revision="seventeen" clone-depth="1" />
+  <project path="vendor/google/cheetah" name="vendor_google_cheetah" remote="yaap" revision="seventeen" clone-depth="1" />
+</manifest>

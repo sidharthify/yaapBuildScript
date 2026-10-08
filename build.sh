@@ -6,6 +6,7 @@ set -e
 OUTPUT_ROOT="${YAAP_DIR:-/mnt/sda/yaap}"
 RCLONE_REMOTE="gdrive"
 RCLONE_ROOT_FOLDER="yaap-builds"
+LOG_DIR="${YAAP_LOG_DIR:-${OUTPUT_ROOT}/logs}"
 
 # android 17 defaults to siso, which needs ~60GB of RAM just to analyze
 # Android.bp files. stick to ninja unless told otherwise
@@ -64,19 +65,34 @@ perform_build() {
     local is_gapps="$3"
     local do_upload="$4"
 
+    local build_type_name="Vanilla"
+    if [ "$is_gapps" = true ]; then
+        build_type_name="Banshee"
+    fi
+
+    mkdir -p "$LOG_DIR"
+    local log="${LOG_DIR}/${device}-${build_type_name}-${variant}-$(date +%Y%m%d-%H%M%S).log"
+
     echo "-----------------------------------------------------"
     echo "YAAP Build Script: starting build: ${device} ${variant} (gapps=${is_gapps})"
+    echo "YAAP Build Script: logging to ${log}"
     echo "-----------------------------------------------------"
 
     . build/envsetup.sh
     lunch "yaap_${device}-${variant}"
 
-    local build_type_name="Vanilla"
+    local status
     if [ "$is_gapps" = true ]; then
-        build_type_name="Banshee"
-        YAAP_BUILDTYPE=Banshee TARGET_BUILD_GAPPS=true m yaap
+        YAAP_BUILDTYPE=Banshee TARGET_BUILD_GAPPS=true m yaap 2>&1 | tee "$log"
+        status=${PIPESTATUS[0]}
     else
-        YAAP_BUILDTYPE=Vanilla m yaap
+        YAAP_BUILDTYPE=Vanilla m yaap 2>&1 | tee "$log"
+        status=${PIPESTATUS[0]}
+    fi
+
+    if [ "$status" -ne 0 ]; then
+        echo "YAAP Build Script >> !! error: build failed, see ${log}"
+        exit "$status"
     fi
 
     handle_artifacts "$device" "$build_type_name" "$do_upload"

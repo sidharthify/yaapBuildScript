@@ -17,7 +17,7 @@ cd "$OUTPUT_ROOT"
 
 handle_artifacts() {
     local device="$1"
-    local build_type="$2" # vanilla or banshee
+    local build_type="$2" # vanilla or Calypso
     local do_upload="$3"
 
     local type_orig="$build_type"
@@ -67,7 +67,7 @@ perform_build() {
 
     local build_type_name="Vanilla"
     if [ "$is_gapps" = true ]; then
-        build_type_name="Banshee"
+        build_type_name="Calypso"
     fi
 
     mkdir -p "$LOG_DIR"
@@ -83,7 +83,7 @@ perform_build() {
 
     local status
     if [ "$is_gapps" = true ]; then
-        YAAP_BUILDTYPE=Banshee TARGET_BUILD_GAPPS=true m yaap 2>&1 | tee "$log"
+        YAAP_BUILDTYPE=Calypso TARGET_BUILD_GAPPS=true m yaap 2>&1 | tee "$log"
         status=${PIPESTATUS[0]}
     else
         YAAP_BUILDTYPE=Vanilla m yaap 2>&1 | tee "$log"

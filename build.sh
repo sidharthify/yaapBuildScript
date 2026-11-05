@@ -107,7 +107,7 @@ upload=false
 
 while [ $# -gt 0 ]; do
     case "$1" in
-        panther|cheetah) device="$1" ;;
+        panther|cheetah|yupei) device="$1" ;;
         --user) variant="user" ;;
         --userdebug) variant="userdebug" ;;
         --gapps) gapps=true ;;
@@ -128,7 +128,7 @@ if [ "$build_all" = true ]; then
     perform_build "cheetah" "$variant" true "$upload"
 else
     if [ -z "$device" ]; then
-        echo "specify device: panther or cheetah" >&2; exit 1
+        echo "specify device: panther, cheetah or yupei" >&2; exit 1
     fi
     perform_build "$device" "$variant" "$gapps" "$upload"
 fi
